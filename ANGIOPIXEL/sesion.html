@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--Pagina principal-->
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Adrian Bordonado Triviño, Norberto Duque Alemañ, Ignacio Guarner Sala, Aldrin
+        Benjamín Guzmán Figueroa">
+		<meta name="keywords" content="HTML5, web, angiografía, segmentación de imágenes, clasificación de imagenes">
+		<meta name="description" content="Segmentación y clasificación de angiografías online">
+		<!--Titulo-->
+		<title>Inicio - ANGIOPIXEL</title>
+		<link rel=icon href="Img/logo_b.png">
+		<!--Titulo final-->
+		<!--CSS-->
+		<link rel="stylesheet" href="Estilos/angio.css">
+		<!--CSS final-->
+		<!--Fuentes e iconos-->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+		<!--Fuentes e iconos final-->
+		
+	</head>
+<body>
+    <div id="access" style="display: block;">
+        <div class="wrapper">
+            <h1>ANGIOPIXEL</h1>
+            <h2>Inicio</h2>
+            <div class="drop-area">
+				<p>Arrastra y suelta tus imágenes</p>
+				<p>o</p>
+				<button type="button">Selecciona tus archivos</button>
+				<input type="file" name="input-img" id="input-img" hidden multiple/>
+			</div>
+			<div id="preview"></div>
+			<div class="buttons">
+                <input type="button" value="Siguiente" id="btn-filtrar" onclick="filtrar()">
+                <input type="button" value="Salir" id="btn-salir" onclick="mover('index.html')">
+            </div>
+        </div>
+    </div>
+	<!--Javascript-->
+	<script src="JS/main.js"></script>
+	<script src="JS/draganddrop.js"></script>
+	<script src="JS/rest.js"></script>
+	<!--Javascript fin-->
+</body>
+
+</html>
