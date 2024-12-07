@@ -79,6 +79,57 @@ function processFile(file) {
         alert('No es un archivo válido');
     }
 }
+
+
+function uploadFile(file, id) {
+    const formData = new FormData();
+    formData.append("file",file);
+    fetch('/user/upload', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.log("Archivo no subido");
+            const statusElement = document.getElementById(id).querySelector(".status-text");
+            statusElement.textContent = "Archivo no subido";
+            statusElement.classList.add("failure");
+        } else {
+            console.log("Archivo subido");
+            console.log(data);
+            const statusElement = document.getElementById(id).querySelector(".status-text");
+            statusElement.textContent = "Archivo subido";
+            statusElement.classList.add("success");
+        }
+    })
+    .catch(error => {
+        console.error('Error al subir el archivo:', error);
+        const statusElement = document.getElementById(id).querySelector(".status-text");
+        statusElement.textContent = "Error al subir";
+        statusElement.classList.add("failure");
+    });
+    /*
+    rest.post("/user/upload",formData,function(estado,resp){
+        if (estado == 403){
+            console.log("Archivo no subido");
+            const statusElement = document.getElementById(""+id).childNodes[3].childNodes[3];
+            statusElement.innerHTML = "<div class='failure'>Archivo no subido</div>";
+            return;
+        }
+        console.log("Archivo subido");
+        console.log(resp);
+        const statusElement = document.getElementById(""+id).childNodes[3].childNodes[3];
+        statusElement.innerHTML = "<div class='success'>Archivo subido</div>";
+    })*/
+}
+
+function eliminar(id){
+    //Manda un cod de eliminación al server IMPLEMENTAR
+
+    const containerElement = document.getElementById(id);
+    containerElement.remove();
+}
+
 /*
 function uploadFile(file, id) {
     // Simulación de un tiempo de espera para representar la subida de archivos
@@ -93,27 +144,3 @@ function uploadFile(file, id) {
     }, 1000); // Simulamos un retraso para asegurar que el elemento existe
 }
 */
-
-function uploadFile(file, id) {
-    const formData = new FormData();
-    formData.append("file",file);
-    rest.post("/user/upload",formData,function(estado,resp){
-        if (estado == 403){
-            console.log("Archivo no subido");
-            const statusElement = document.getElementById(""+id).childNodes[3].childNodes[3];
-            statusElement.innerHTML = "<div class='failure'>Archivo no subido</div>";
-            return;
-        }
-        console.log("Archivo subido");
-        console.log(resp);
-        const statusElement = document.getElementById(""+id).childNodes[3].childNodes[3];
-        statusElement.innerHTML = "<div class='success'>Archivo subido</div>";
-    })
-}
-
-function eliminar(id){
-    //Manda un cod de eliminación al server IMPLEMENTAR
-
-    const containerElement = document.getElementById(id);
-    containerElement.remove();
-}

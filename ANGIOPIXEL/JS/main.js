@@ -58,7 +58,16 @@ function guardar_reg(){
   })
 }
 
+async function aplicar(){
+  var filtro1 = document.getElementById("filtro1").value;
+  var filtro2 = document.getElementById("filtro2").value;
+  var filtro3 = document.getElementById("filtro3").value;
+  var modeloCNN = document.getElementById("CNN1");
+ //FALTA IMPLEMENTAR
+}
+
 function filtrar(){
+  mover("filtros.html");
   //runPython();
 
 }

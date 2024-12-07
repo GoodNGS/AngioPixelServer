@@ -1,12 +1,13 @@
 var express = require("express");
+const multer = require('multer');
+const path = require('path');
+const { exec } = require("child_process");
 
 var app = express();
 
 app.use("/user", express.static("ANGIOPIXEL"));
 
 app.use(express.json());
-//app.use(fileUpload);
-//app.use(cors);
 
 var datos=require("./datos.js");
 var usuarios=datos.usrs;
@@ -34,10 +35,49 @@ app.post("/user/register",function(req,res){
         res.status(f).json("El usuario ha sido creado");
     }
 })
+//---Subida de imágenes---//
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './ANGIOPIXEL/Local'); // Carpeta donde se almacenarán las imágenes
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
 
-app.post("/user/upload",function(req,res){
-    res.status(200).json("El archivo "+req.body+" subido correctamente");
+const upload = multer({ storage });
+
+app.post("/user/upload",upload.single('file'),function(req,res){
+    if(!req.file){
+        return res.status(400).send({error:'No se han subido los archivos'});
+    }
+    res.status(200).send({ message: 'File uploaded successfully', filePath: `/uploads/${req.file.filename}` });
 })
+
+//--Ejecutar modelo en python--//
+app.post("user/run-python", (req, res) => {
+    // Ruta para ejecutar el archivo Python
+    const scriptPath = "CNN.py"; // Ruta al archivo Python
+    const args = req.body.args || []; // Argumentos opcionales para el script
+
+    const command = `python ${scriptPath} ${args.join(" ")}`;
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error ejecutando el script: ${error.message}`);
+            return res.status(500).send({ error: error.message });
+        }
+        if (stderr) {
+            console.error(`Error en el script: ${stderr}`);
+            return res.status(400).send({ error: stderr });
+        }
+
+        console.log(`Salida del script: ${stdout}`);
+        res.status(200).send({ output: stdout });
+    });
+});
+
+
 //----------FUNCIONES---------//
 function asigID(lista){
     var id = 0;

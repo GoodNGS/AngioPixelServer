@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 
 # Ruta de la imagen
-ruta_imagen = 'C:\\Users\\pulgu\\Desktop\\AngioPixel\\ANGIOPIXEL\\Local\\p1_v1_00038.png'
+ruta_imagen = 'ANGIOPIXEL/Local/p1_v1_00038.png'
 
 
 # Tamaño esperado por el modelo (ajusta según corresponda, por ejemplo: 224x224 para modelos como MobileNet)
