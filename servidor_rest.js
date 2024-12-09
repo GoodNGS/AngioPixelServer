@@ -1,6 +1,7 @@
 var express = require("express");
 const multer = require('multer');
 const path = require('path');
+const { spawn } = require('child_process');
 const { exec } = require("child_process");
 
 var app = express();
@@ -74,6 +75,36 @@ app.post("user/run-python", (req, res) => {
 
         console.log(`Salida del script: ${stdout}`);
         res.status(200).send({ output: stdout });
+    });
+});
+
+app.post('/predict', (req, res) => {
+    const { imagePath } = req.body; // Ruta de la imagen enviada desde el cliente
+
+    if (!imagePath) {
+        return res.status(400).send({ error: 'Se requiere una ruta de imagen.' });
+    }
+
+    // Ejecutar el script Python
+    const pythonProcess = spawn('python3', ['script.py', imagePath]);
+
+    let output = '';
+    let errorOutput = '';
+
+    pythonProcess.stdout.on('data', (data) => {
+        output += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        errorOutput += data.toString();
+    });
+
+    pythonProcess.on('close', (code) => {
+        if (code === 0) {
+            res.send({ prediction: output.trim() }); // Enviar predicción al cliente
+        } else {
+            res.status(500).send({ error: 'Error al ejecutar el script Python', details: errorOutput });
+        }
     });
 });
 

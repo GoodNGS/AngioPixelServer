@@ -68,28 +68,30 @@ async function aplicar(){
 
 function filtrar(){
   mover("filtros.html");
-  //runPython();
-
+  CNN();
 }
-async function runPython() {
-  const pyodide = await loadPyodide();
 
-  await pyodide.loadPackage(["numpy", "pillow"]);
-
-  // Obtener ruta de imagen desde el textarea
-  const rutaImagen = document.getElementById("ruta-imagen").value.trim();
-
-  // Verificar si el usuario ha proporcionado una ruta
-  if (!rutaImagen) {
-    document.getElementById("output").textContent = "Por favor, proporciona una ruta válida.";
-    return;
-  }
-  console.log(rutaImagen);
-  const pythonCode = document.getElementById('CNN').value;
-  try {
-    const result = pyodide.runPython(pythonCode);
-    console.log(result);
-  } catch (error) {
-    console.log(`Error:`+error);
-  }
+function CNN(){
+  // Cambia esto a la ruta real de tu imagen
+  const imagePath = "/workspaces/AngioPixelServer/ANGIOPIXEL/Local/p1_v1_00003.png";
+  console.log("hola")
+  // Llama al servidor para ejecutar el script Python
+  fetch('http://localhost:3000/run-python', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imagePath: imagePath }),
+   })
+  .then((response) => response.json())
+  .then((data) => {
+       if (data.error) {
+          console.error("Error:", data.error);
+      } else {
+          console.log("Resultado:", data.output);
+      }
+  })
+  .catch((error) => {
+      console.error("Error en la solicitud:", error);
+  });
 }
